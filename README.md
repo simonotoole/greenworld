@@ -1,2 +1,2 @@
 # greenworld
-A simple evolution simulator using a genetic algorithm
+A simple evolution simulator using a genetic algorithm.
