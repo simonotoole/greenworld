@@ -11,19 +11,19 @@ body {
   background-color: rgb(1, 29, 23);
   font-family: "Montserrat", sans-serif;
   font-size: 100%;
-  color: #add8e6;
+  color: rgb(173, 216, 230);
 }
 
 h1 {
   margin: 0;
   font-family: "Comfortaa", cursive;
   font-size: calc(1.5rem + 3vw);
-  color: #008080;
+  color: rgb(0, 128, 128);
 }
 
 .btn-outline-primary {
-    color: #add8e6;
-    border-color: #add8e6;
+    color: rgb(173, 216, 230);
+    border-color: rgb(173, 216, 230);
 }
 
 .btn-outline-primary:hover {
