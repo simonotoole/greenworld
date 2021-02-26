@@ -1,7 +1,12 @@
 function setup() {
-  // put setup code here
+  //createCanvas(1200, 742);
+  createCanvas(windowWidth * 0.7, windowHeight * 0.7);
 }
 
 function draw() {
-  // put drawing code here
+  background(17, 59, 49);
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth * 0.7, windowHeight * 0.7);
 }
