@@ -29,11 +29,10 @@
         role="group"
         aria-label="Simulator control buttons"
       >
-        <button type="button" class="btn btn-outline-primary">Play</button>
-        <button type="button" class="btn btn-outline-primary">Stop</button>
-        <button type="button" class="btn btn-outline-primary">
-          Show Stats
-        </button>
+        <button type="button" class="btn btn-outline-primary" id="btn-new">New</button>
+        <button type="button" class="btn btn-outline-primary" id="btn-play">Play</button>
+        <button type="button" class="btn btn-outline-primary" id="btn-pause">Pause</button>
+        <button type="button" class="btn btn-outline-primary" id="btn-stats">Show Stats</button>
       </div>
     </header>
     <main class="d-flex justify-content-around"></main>
@@ -65,6 +64,8 @@
       integrity="sha512-wM+t5MzLiNHl2fwT5rWSXr2JMeymTtixiw2lWyVk1JK/jDM4RBSFoH4J8LjucwlDdY6Mu84Kj0gPXp7rLGaDyA=="
       crossorigin="anonymous"
     ></script>
-    <script src="js/sketch.js"></script>
+    <!-- Custom JS -->
+    <script src="js/helpers/buttons.js"></script>
+    <script src="js/simulator/sketch.js"></script>
   </body>
 </html>

@@ -21,14 +21,24 @@ h1 {
   color: rgb(0, 128, 128);
 }
 
+.btn {
+  border-radius: 0;
+}
+
 .btn-outline-primary {
-    color: rgb(173, 216, 230);
-    border-color: rgb(173, 216, 230);
+  color: rgb(173, 216, 230);
+  border-color: rgb(173, 216, 230);
 }
 
 .btn-outline-primary:hover {
-    background-color: rgb(30, 144, 255);
-    border-color: rgb(30, 144, 255);
+  background-color: rgb(30, 144, 255);
+  border-color: rgb(30, 144, 255);
+}
+
+#btn-new,
+#btn-pause,
+#btn-stats {
+  display: none;
 }
 
 p {
