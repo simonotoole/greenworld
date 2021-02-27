@@ -29,6 +29,7 @@ playButton.addEventListener("click", (event) => {
     show(pauseButton);
     hide(playButton);
     hide(statsButton);
+    play();
 });
 
 newButton.addEventListener("click", (event) => {
@@ -36,10 +37,12 @@ newButton.addEventListener("click", (event) => {
     hide(newButton);
     hide(pauseButton);
     hide(statsButton);
+    initialize();
 });
 
 pauseButton.addEventListener("click", (event) => {
     show(playButton);
     show(statsButton);
     hide(pauseButton);
+    pause();
 });
