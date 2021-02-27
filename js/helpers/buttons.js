@@ -25,24 +25,27 @@ const pauseButton = document.getElementById("btn-pause");
 const statsButton = document.getElementById("btn-stats");
 
 playButton.addEventListener("click", (event) => {
+    play();
+
     show(newButton);
     show(pauseButton);
     hide(playButton);
     hide(statsButton);
-    play();
 });
 
 newButton.addEventListener("click", (event) => {
+    initialize();
+
     show(playButton);
     hide(newButton);
     hide(pauseButton);
     hide(statsButton);
-    initialize();
 });
 
 pauseButton.addEventListener("click", (event) => {
+    pause();
+
     show(playButton);
     show(statsButton);
     hide(pauseButton);
-    pause();
 });

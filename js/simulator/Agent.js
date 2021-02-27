@@ -41,15 +41,26 @@ class Agent {
      * Move and display this Agent.
      */
     run() {
-        this.update();
-        this.checkEdges();
-        this.display();
+        this.update_();
+        this.checkEdges_();
+        this.display_();
+    }
+
+    /**
+     * Steer this Agent toward the nearest Food item.
+     * @param {Food[]} food An array of Food objects.
+     */
+    seek(food) {
+        let nearestFoodLocation = this.findNearest_(food);
+        let steer = this.steer_(nearestFoodLocation);
+        this.applyForce_(steer);
     }
 
     /**
      * Calculate this Agent's velocity and location.
+     * @private
      */
-    update() {
+    update_() {
         this.velocity_.add(this.acceleration_);
         this.velocity_.limit(this.maxSpeed_);
         this.location_.add(this.velocity_);
@@ -58,8 +69,9 @@ class Agent {
 
     /**
      * Perform canvas wraparound for this Agent.
+     * @private
      */
-    checkEdges() {
+    checkEdges_() {
         if (this.location_.x < 0) {
             this.location_.x = width;
         } else if (this.location_.x > width) {
@@ -75,8 +87,9 @@ class Agent {
 
     /**
      * Display this Agent to the p5 canvas.
+     * @private
      */
-    display() {
+    display_() {
         fill(this.col_);
         noStroke();
         ellipseMode(CENTER);
@@ -84,28 +97,40 @@ class Agent {
     }
 
     /**
-     * Steer this Agent toward the nearest Food item.
-     * @param {Food[]} food An array of Food objects.
-     */
-    seek(food) {
-        let nearestFoodLocation = createVector();
+ * Find the location of the nearest Food item to this Agent.
+ * @private
+ * @param {Food[]} food An array of Food objects.
+ * @returns {p5.Vector} The location of the nearest Food item.
+ */
+    findNearest_(food) {
+        let nearest = createVector();
         let distance = 100000;    // Set the nearest distance to a large value that will never be exceeded.
 
         // Find which Food item is the nearest to this Agent.
         food.forEach((f) => {
             if (this.location_.dist(f.getLocation()) < distance) {
-                nearestFoodLocation = f.getLocation();
+                nearest = f.getLocation();
                 distance = p5.Vector.dist(this.location_, f.getLocation());
             }
         });
 
-        // Calculate a steer force to direct this Agent toward the nearest Food item.
-        let direction = p5.Vector.sub(nearestFoodLocation, this.location_).normalize();
+        return nearest;
+    }
+
+    /**
+     * Calculate a steer force to direct this Agent toward the desired location.
+     * @private
+     * @param {p5.Vector} desiredLocation The location to steer towards.
+     * @returns {p5.Vector} The steer force.
+     */
+    steer_(desiredLocation) {
+        let distance = p5.Vector.dist(this.location_, desiredLocation);
+        let direction = p5.Vector.sub(desiredLocation, this.location_).normalize();
         let speed = this.maxSpeed_;
 
         // Arriving behaviour: if distance is less than 100, then the Agent will start to slow down.
         if (distance < 100) {
-            // The closer the Agent is to the desired Food item, the slower it will move.
+            // The closer the Agent is to the desired location, the slower it will move.
             speed = map(distance, 0, 100, 0, this.maxSpeed_);
         }
 
@@ -113,14 +138,15 @@ class Agent {
         let steer = p5.Vector.sub(desiredVelocity, this.velocity_);
         steer.limit(this.maxForce_);
 
-        this.applyForce(steer);
+        return steer;
     }
 
     /**
-     * Add a force vector to this Agent's acceleration vector.
+     * Apply a force to this Agent's acceleration.
+     * @private
      * @param {p5.Vector} force
      */
-    applyForce(force) {
+    applyForce_(force) {
         this.acceleration_.add(force);
     }
 }
