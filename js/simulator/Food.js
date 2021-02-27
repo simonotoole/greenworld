@@ -1,6 +1,8 @@
 // @ts-nocheck
-/** A class representing a health-restoring food item for consumption by agents
- * in the simulation. */
+/** 
+ * A class representing a health-restoring food item for consumption by agents
+ * in the simulation.
+*/
 class Food {
     /**
      * Create a Food item.

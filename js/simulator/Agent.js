@@ -57,6 +57,22 @@ class Agent {
     }
 
     /**
+     * Determine if this Agent is in a location to eat food; if it is, remove
+     * that Food item from the simulation.
+     * @param {Food[]} food An array of Food objects.
+     */
+    eat(food) {
+        food.forEach((f) => {
+            let distance = p5.Vector.dist(this.location_, f.getLocation());
+
+            // Collision detection: if this Agent and the Food object are intersecting, remove the Food object.
+            if (distance < this.radius_ / 2 + f.getSize() / 2) {
+                f.remove(food);
+            }
+        });
+    }
+
+    /**
      * Calculate this Agent's velocity and location.
      * @private
      */

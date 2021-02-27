@@ -6,8 +6,7 @@
 "use strict";
 
 let started;
-let food;
-let agent;
+let engine;
 
 /**
  * Define the p5 canvas properties and initialize the simulator.
@@ -26,19 +25,7 @@ function draw() {
     }
 
     background(17, 59, 49);
-
-    food.forEach((f) => {
-        f.display();
-
-        let distance = p5.Vector.dist(agent.getLocation(), f.getLocation());
-
-        if (distance < agent.getRadius() / 2 + f.getSize() / 2) {
-            f.remove(food);
-        }
-    });
-
-    agent.run();
-    agent.seek(food);
+    engine.run();
 }
 
 /**
@@ -53,14 +40,9 @@ function windowResized() {
  */
 const initialize = () => {
     background(17, 59, 49);
+
     started = false;
-    food = [];
-
-    for (let i = 0; i < 50; i++) {
-        food.push(new Food());
-    }
-
-    agent = new Agent();
+    engine = new Engine(50);
 };
 
 /**
