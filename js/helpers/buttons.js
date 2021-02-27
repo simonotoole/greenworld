@@ -24,21 +24,21 @@ const newButton = document.getElementById("btn-new");
 const pauseButton = document.getElementById("btn-pause");
 const statsButton = document.getElementById("btn-stats");
 
-playButton.addEventListener("click", function(event) {
+playButton.addEventListener("click", (event) => {
     show(newButton);
     show(pauseButton);
     hide(playButton);
     hide(statsButton);
 });
 
-newButton.addEventListener("click", function(event) {
+newButton.addEventListener("click", (event) => {
     show(playButton);
     hide(newButton);
     hide(pauseButton);
     hide(statsButton);
 });
 
-pauseButton.addEventListener("click", function(event) {
+pauseButton.addEventListener("click", (event) => {
     show(playButton);
     show(statsButton);
     hide(pauseButton);
