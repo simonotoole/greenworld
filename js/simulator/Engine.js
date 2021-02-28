@@ -67,15 +67,16 @@ class Engine {
      * @private
      */
     manageAgents_() {
-        this.agents_.forEach((a, index, object) => {
+        this.agents_.forEach((a, index) => {
             if (a.isDead()) {
-                object.splice(index, 1);
+                this.agents_.splice(index, 1);
                 this.food_.push(new Food(this.size_, a.getLocation()));
 
                 return;
             }
 
             a.run();
+            a.separate(this.agents_);
             a.seek(this.food_);
             a.eat(this.food_);
         });

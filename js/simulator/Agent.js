@@ -21,6 +21,8 @@ class Agent {
         this.health_ = randomGaussian(30, 10);
         /** @private {p5.Color} */
         this.color_ = color(63, 63, 255);
+        /** @private {boolean} Use this property to visualise agent collision. */
+        this.highlight_ = false;
     }
 
     /**
@@ -56,6 +58,44 @@ class Agent {
         this.display_();
         // An agent loses one health point per second.
         this.health_ -= 1 / frameRate();
+    }
+
+    /**
+     * Steer this Agent away from nearby Agents.
+     * @param {Agent[]} agents An array of Agents.
+     */
+    separate(agents) {
+        const separation = this.size_;
+        const separationLimit = 0.05;    // Limit how much separation affects steer.
+        let steer = createVector(0, 0);
+        let count = 0;    // Keep a count of how many Agents this Agent is in contact with.
+        this.highlight_ = false;
+
+        // Check every other Agent to determine if this Agent is in contact with it.
+        agents.forEach((other) => {
+            const distance = p5.Vector.dist(this.location_, other.getLocation());
+
+            // If this Agent has collided with another, calculate the direction to steer towards.
+            if (distance > 0 && distance < separation) {
+                this.highlight_ = true;
+                let direction = p5.Vector.sub(this.location_, other.getLocation())
+                direction.normalize();
+                direction.div(distance);
+                steer.add(direction);
+                count++;
+            }
+        });
+
+        // Calculate an average steer force away from all Agents that this Agent is in contact with.
+        if (count > 0) {
+            steer.div(count);
+            steer.normalize();
+            steer.mult(this.maxSpeed_);
+            steer.sub(this.velocity_);
+            steer.limit(separationLimit);
+        }
+
+        this.applyForce_(steer);
     }
 
     /**
@@ -119,7 +159,12 @@ class Agent {
      * @private
      */
     display_() {
-        fill(this.color_);
+        if (this.highlight_ === true) {
+            fill(255, 63, 255);
+        } else {
+            fill(this.color_);
+        }
+
         noStroke();
         ellipseMode(CENTER);
         ellipse(this.location_.x, this.location_.y, this.size_, this.size_);
