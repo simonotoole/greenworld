@@ -11,7 +11,7 @@ class Food {
         /** @private {p5.Vector} */
         this.location_ = createVector(Math.random() * width, Math.random() * height);
         /** @private {number} */
-        this.size_ = 6;
+        this.size_ = 6;    // TODO Make the size dependent on the viewport size.
     }
 
     /**

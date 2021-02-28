@@ -1,3 +1,4 @@
+// @ts-nocheck
 /** 
  * A class representing the evolution simulator engine, responsible for
  * running the simulation.
@@ -9,7 +10,7 @@ class Engine {
      */
     constructor(size) {
         /** @private {number} */
-        this.size_ = size;
+        this.size_ = size;    // TODO Consider making the size dependent on the viewport size.
         /** @private {Agent[]} */
         this.agents_ = [];
 
@@ -45,12 +46,16 @@ class Engine {
         // Set a regrowth rate for Food items based on the size of the Agent
         // population. Increase the constant to increase the regrowth rate.
         // Note that this constant should not be greater than the number of
-        // Agents in the simulation.
-        if (this.agents_.length === 0) {
+        // Agents in the simulation, as this would result in unbounded food
+        // regrowth. Setting the constant to 0 or a negative value turns off
+        // food regrowth.
+        const regrowthConstant = 1.0;
+
+        if (regrowthConstant > this.agents_.length || this.agents_.length === 0) {
             return;
         }
 
-        let regrowthRate = 1.0 / this.agents_.length;
+        let regrowthRate = regrowthConstant / this.agents_.length;
 
         // Add a random probability that new food will be added to the simulation.
         if (Math.random() < regrowthRate) {

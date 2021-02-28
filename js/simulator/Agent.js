@@ -12,7 +12,7 @@ class Agent {
         /** @private {p5.Vector} */
         this.acceleration_ = createVector(0, 0);
         /** @private {number} */
-        this.radius_ = 24;
+        this.radius_ = 24;    // TODO Make radius dependent on the viewport size.
         /** @private {number} */
         this.maxSpeed_ = 12;
         /** @private {number} */
