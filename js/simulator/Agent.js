@@ -51,8 +51,8 @@ class Agent {
      * @param {Food[]} food An array of Food objects.
      */
     seek(food) {
-        let nearestFoodLocation = this.findNearest_(food);
-        let steer = this.steer_(nearestFoodLocation);
+        const nearestFoodLocation = this.findNearest_(food);
+        const steer = this.steer_(nearestFoodLocation);
         this.applyForce_(steer);
     }
 
@@ -120,7 +120,7 @@ class Agent {
  */
     findNearest_(food) {
         let nearest = createVector();
-        let distance = 100000;    // Set the nearest distance to a large value that will never be exceeded.
+        let distance = Number.MAX_SAFE_INTEGER;    // Set the nearest distance to a large value that will never be exceeded.
 
         // Find which Food item is the nearest to this Agent.
         food.forEach((f) => {
@@ -140,8 +140,8 @@ class Agent {
      * @returns {p5.Vector} The steer force.
      */
     steer_(desiredLocation) {
-        let distance = p5.Vector.dist(this.location_, desiredLocation);
-        let direction = p5.Vector.sub(desiredLocation, this.location_).normalize();
+        const distance = p5.Vector.dist(this.location_, desiredLocation);
+        const direction = p5.Vector.sub(desiredLocation, this.location_).normalize();
         let speed = this.maxSpeed_;
 
         // Arriving behaviour: if distance is less than 100, then the Agent will start to slow down.
@@ -150,7 +150,7 @@ class Agent {
             speed = map(distance, 0, 100, 0, this.maxSpeed_);
         }
 
-        let desiredVelocity = direction.mult(speed);
+        const desiredVelocity = direction.mult(speed);
         let steer = p5.Vector.sub(desiredVelocity, this.velocity_);
         steer.limit(this.maxForce_);
 

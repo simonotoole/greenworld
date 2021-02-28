@@ -55,7 +55,7 @@ class Engine {
             return;
         }
 
-        let regrowthRate = regrowthConstant / this.agents_.length;
+        const regrowthRate = regrowthConstant / this.agents_.length;
 
         // Add a random probability that new food will be added to the simulation.
         if (Math.random() < regrowthRate) {
