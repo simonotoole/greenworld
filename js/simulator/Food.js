@@ -6,10 +6,11 @@ class Food {
     /**
      * Create a Food item.
      * @param {number} simulatorSize The size of the simulator, used to determine the size of a Food item.
+     * @param {p5.Vector} location The Food item's location.
      */
-    constructor(simulatorSize) {
+    constructor(simulatorSize, location = createVector(Math.random() * width, Math.random() * height)) {
         /** @private {p5.Vector} */
-        this.location_ = createVector(Math.random() * width, Math.random() * height);
+        this.location_ = location;
         /** @private {number} */
         this.size_ = width / simulatorSize / 4;
     }

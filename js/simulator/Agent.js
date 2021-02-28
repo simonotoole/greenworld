@@ -14,9 +14,11 @@ class Agent {
         /** @private {number} */
         this.size_ = (width / simulatorSize > 10) ? width / simulatorSize : 10;
         /** @private {number} */
-        this.maxSpeed_ = 12;
+        this.maxSpeed_ = 5;
         /** @private {number} */
-        this.maxForce_ = 0.1;
+        this.maxForce_ = 0.01;
+        /** @private {number} */
+        this.health_ = randomGaussian(30, 10);
         /** @private {p5.Color} */
         this.color_ = color(63, 63, 255);
     }
@@ -38,12 +40,22 @@ class Agent {
     }
 
     /**
-     * Move and display this Agent.
+     * Determine if this Agent's health is 0.
+     * @returns {boolean} A value representing whether or not this Agent is dead.
+     */
+    isDead() {
+        return this.health_ <= 0;
+    }
+
+    /**
+     * Move and display this Agent, and decrement its health.
      */
     run() {
         this.update_();
         this.checkEdges_();
         this.display_();
+        // An agent loses one health point per second.
+        this.health_ -= 1 / frameRate();
     }
 
     /**
@@ -68,6 +80,7 @@ class Agent {
             // Collision detection: if this Agent and the Food object are intersecting, remove the Food object.
             if (distance < this.size_ / 2 + f.getSize() / 2) {
                 f.remove(food);
+                this.health_ += 1;
             }
         });
     }

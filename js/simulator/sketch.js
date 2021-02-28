@@ -11,6 +11,7 @@ let engine;
  * Define the p5 canvas properties and initialize the simulator.
  */
 function setup() {
+    frameRate(60);
     createCanvas(windowWidth * 0.7, windowHeight * 0.7);
     initialize();
 }
