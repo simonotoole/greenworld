@@ -15,14 +15,14 @@ class Engine {
         this.agents_ = [];
 
         for (let i = 0; i < this.size_; i++) {
-            this.agents_.push(new Agent());
+            this.agents_.push(new Agent(this.size_));
         }
 
         /** @private {Food[]} */
         this.food_ = [];
 
         for (let i = 0; i < this.size_ * 20; i++) {
-            this.food_.push(new Food());
+            this.food_.push(new Food(this.size_));
         }
     }
 

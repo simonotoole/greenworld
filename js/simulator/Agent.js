@@ -3,8 +3,9 @@
 class Agent {
     /**
      * Create an Agent.
+     * @param {number} simulatorSize The size of the simulator, used to determine the size of an Agent.
      */
-    constructor() {
+    constructor(simulatorSize) {
         /** @private {p5.Vector} */
         this.location_ = createVector(Math.random() * width, Math.random() * height);
         /** @private {p5.Vector} */
@@ -12,13 +13,13 @@ class Agent {
         /** @private {p5.Vector} */
         this.acceleration_ = createVector(0, 0);
         /** @private {number} */
-        this.size_ = 24;    // TODO Make size dependent on the viewport size.
+        this.size_ = (width / simulatorSize > 10) ? width / simulatorSize : 10;
         /** @private {number} */
         this.maxSpeed_ = 12;
         /** @private {number} */
         this.maxForce_ = 0.1;
         /** @private {p5.Color} */
-        this.col_ = color(63, 63, 255);
+        this.color_ = color(63, 63, 255);
     }
 
     /**
@@ -30,8 +31,8 @@ class Agent {
     }
 
     /**
-     * Get this Agent's radius.
-     * @returns {number} The Agent's radius.
+     * Get this Agent's size.
+     * @returns {number} The Agent's size.
      */
     getSize() {
         return this.size_;
@@ -106,7 +107,7 @@ class Agent {
      * @private
      */
     display_() {
-        fill(this.col_);
+        fill(this.color_);
         noStroke();
         ellipseMode(CENTER);
         ellipse(this.location_.x, this.location_.y, this.size_, this.size_);
@@ -145,7 +146,7 @@ class Agent {
         let speed = this.maxSpeed_;
 
         // Arriving behaviour: if distance is less than 100, then the Agent will start to slow down.
-        if (distance < 100) {
+        if (distance < this.size_ * 4) {
             // The closer the Agent is to the desired location, the slower it will move.
             speed = map(distance, 0, 100, 0, this.maxSpeed_);
         }

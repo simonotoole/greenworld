@@ -7,11 +7,11 @@ class Food {
     /**
      * Create a Food item.
      */
-    constructor() {
+    constructor(simulatorSize) {
         /** @private {p5.Vector} */
         this.location_ = createVector(Math.random() * width, Math.random() * height);
         /** @private {number} */
-        this.size_ = 6;    // TODO Make the size dependent on the viewport size.
+        this.size_ = width / simulatorSize / 4;
     }
 
     /**
