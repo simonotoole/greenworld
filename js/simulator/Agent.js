@@ -12,7 +12,7 @@ class Agent {
         /** @private {p5.Vector} */
         this.acceleration_ = createVector(0, 0);
         /** @private {number} */
-        this.radius_ = 24;    // TODO Make radius dependent on the viewport size.
+        this.size_ = 24;    // TODO Make size dependent on the viewport size.
         /** @private {number} */
         this.maxSpeed_ = 12;
         /** @private {number} */
@@ -33,8 +33,8 @@ class Agent {
      * Get this Agent's radius.
      * @returns {number} The Agent's radius.
      */
-    getRadius() {
-        return this.radius_;
+    getSize() {
+        return this.size_;
     }
 
     /**
@@ -66,7 +66,7 @@ class Agent {
             let distance = p5.Vector.dist(this.location_, f.getLocation());
 
             // Collision detection: if this Agent and the Food object are intersecting, remove the Food object.
-            if (distance < this.radius_ / 2 + f.getSize() / 2) {
+            if (distance < this.size_ / 2 + f.getSize() / 2) {
                 f.remove(food);
             }
         });
@@ -109,22 +109,22 @@ class Agent {
         fill(this.col_);
         noStroke();
         ellipseMode(CENTER);
-        ellipse(this.location_.x, this.location_.y, this.radius_, this.radius_);
+        ellipse(this.location_.x, this.location_.y, this.size_, this.size_);
     }
 
     /**
- * Find the location of the nearest Food item to this Agent.
- * @private
- * @param {Food[]} food An array of Food objects.
- * @returns {p5.Vector} The location of the nearest Food item.
- */
+     * Find the location of the nearest Food item to this Agent.
+     * @private
+     * @param {Food[]} food An array of Food objects.
+     * @returns {p5.Vector} The location of the nearest Food item.
+     */
     findNearest_(food) {
-        let nearest = createVector();
+        let nearest = createVector(0, 0);
         let distance = Number.MAX_SAFE_INTEGER;    // Set the nearest distance to a large value that will never be exceeded.
 
         // Find which Food item is the nearest to this Agent.
         food.forEach((f) => {
-            if (this.location_.dist(f.getLocation()) < distance) {
+            if (p5.Vector.dist(this.location_, f.getLocation()) < distance) {
                 nearest = f.getLocation();
                 distance = p5.Vector.dist(this.location_, f.getLocation());
             }

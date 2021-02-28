@@ -3,7 +3,7 @@
  * simulator control buttons and attaches click event listeners to these
  * buttons.
  */
-"use strict"
+"use strict";
 
 /**
  * @param {HTMLElement} btn A HTML button.

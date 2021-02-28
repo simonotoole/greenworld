@@ -45,13 +45,13 @@ class Engine {
 
         // Set a regrowth rate for Food items based on the size of the Agent
         // population. Increase the constant to increase the regrowth rate.
-        // Note that this constant should not be greater than the number of
-        // Agents in the simulation, as this would result in unbounded food
-        // regrowth. Setting the constant to 0 or a negative value turns off
-        // food regrowth.
+        // Note that this constant should not be greater than or equal to the
+        // number of Agents in the simulation, as this would result in
+        // unbounded food regrowth. Setting the constant to 0 or a negative
+        // value turns off food regrowth.
         const regrowthConstant = 1.0;
 
-        if (regrowthConstant > this.agents_.length || this.agents_.length === 0) {
+        if (regrowthConstant >= this.agents_.length || this.agents_.length === 0) {
             return;
         }
 
