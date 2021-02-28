@@ -1,4 +1,3 @@
-// @ts-nocheck
 /** 
  * A class representing the evolution simulator engine, responsible for
  * running the simulation.
@@ -59,7 +58,7 @@ class Engine {
 
         // Add a random probability that new food will be added to the simulation.
         if (Math.random() < regrowthRate) {
-            this.food_.push(new Food());
+            this.food_.push(new Food(this.size_));
         }
     }
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /** Class representing an autonomous agent in the simulation. */
 class Agent {
     /**

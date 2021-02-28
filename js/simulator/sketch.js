@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * @fileoverview This file is the p5.js entry point and is responsible for
  * defining the canvas properties, and initializing and running the simulator.

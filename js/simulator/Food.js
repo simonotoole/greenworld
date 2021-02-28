@@ -1,4 +1,3 @@
-// @ts-nocheck
 /** 
  * A class representing a health-restoring food item for consumption by agents
  * in the simulation.
@@ -6,6 +5,7 @@
 class Food {
     /**
      * Create a Food item.
+     * @param {number} simulatorSize The size of the simulator, used to determine the size of a Food item.
      */
     constructor(simulatorSize) {
         /** @private {p5.Vector} */
