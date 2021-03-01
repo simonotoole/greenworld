@@ -12,7 +12,13 @@ let engine;
  */
 function setup() {
     frameRate(60);
-    createCanvas(windowWidth * 0.7, windowHeight * 0.7);
+
+    if (windowWidth <= 425) {
+        createCanvas(windowWidth * 0.96, windowHeight * 0.7);
+    } else {
+        createCanvas(windowWidth * 0.7, windowHeight * 0.7);
+    }
+
     initialize();
 }
 
@@ -33,7 +39,11 @@ function draw() {
  * Resize the canvas when the window is resized.
  */
 function windowResized() {
-    resizeCanvas(windowWidth * 0.7, windowHeight * 0.7);
+    if (windowWidth <= 425) {
+        resizeCanvas(windowWidth * 0.96, windowHeight * 0.7);
+    } else {
+        resizeCanvas(windowWidth * 0.7, windowHeight * 0.7);
+    }
 }
 
 /**

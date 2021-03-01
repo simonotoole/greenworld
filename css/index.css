@@ -16,6 +16,16 @@ body {
   color: rgb(173, 216, 230);
 }
 
+@media only screen and (max-width: 425px) {
+  body {
+    width: 96%;
+  }
+
+  canvas {
+    width: 100% !important;
+  }
+}
+
 h1 {
   margin: 0;
   font-family: "Comfortaa", cursive;
