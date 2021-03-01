@@ -20,7 +20,7 @@ class Agent {
         /** @private {number} */
         this.health_ = randomGaussian(30, 10);
         /** @private {p5.Color} */
-        this.color_ = color(63, 63, 255);
+        this.color_ = color(33, 237, 237);
         /** @private {boolean} Use this property to visualise agent collision. */
         this.highlight_ = false;
     }
@@ -160,7 +160,7 @@ class Agent {
      */
     display_() {
         if (this.highlight_ === true) {
-            fill(255, 63, 255);
+            fill(161, 22, 124);
         } else {
             fill(this.color_);
         }

@@ -24,7 +24,8 @@ function draw() {
         return;
     }
 
-    background(17, 59, 49);
+    //background(17, 59, 49);
+    background(0, 128, 128);
     engine.run();
 }
 
@@ -39,7 +40,8 @@ function windowResized() {
  * Define the initial simulator environment.
  */
 const initialize = () => {
-    background(17, 59, 49);
+    //background(17, 59, 49);
+    background(0, 128, 128);
 
     started = false;
     engine = new Engine(50);

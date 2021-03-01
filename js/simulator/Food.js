@@ -35,7 +35,7 @@ class Food {
      * Display this Food item to the p5 canvas.
      */
     display() {
-        fill(255, 255, 0);
+        fill(237, 212, 81);
         noStroke();
         rectMode(CENTER);
         rect(this.location_.x, this.location_.y, this.size_, this.size_);
