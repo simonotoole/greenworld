@@ -30,7 +30,6 @@ function draw() {
         return;
     }
 
-    //background(17, 59, 49);
     background(0, 128, 128);
     engine.run();
 }
@@ -50,7 +49,6 @@ function windowResized() {
  * Define the initial simulator environment.
  */
 const initialize = () => {
-    //background(17, 59, 49);
     background(0, 128, 128);
 
     started = false;
@@ -70,4 +68,11 @@ const play = () => {
  */
 const pause = () => {
     noLoop();
+};
+
+/**
+ * Write statistics relating to the current run of the simulator to a file.
+ */
+const saveStatistics = () => {
+    engine.save();
 };

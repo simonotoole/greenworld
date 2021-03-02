@@ -49,3 +49,7 @@ pauseButton.addEventListener("click", (event) => {
     show(statsButton);
     hide(pauseButton);
 });
+
+statsButton.addEventListener("click", (event) => {
+    saveStatistics();
+});

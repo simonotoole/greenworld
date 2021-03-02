@@ -1,4 +1,4 @@
-/** Class representing an autonomous agent in the simulation. */
+/** A class representing an autonomous agent in the simulation. */
 class Agent {
     /**
      * Create an Agent.

@@ -10,6 +10,10 @@ class Engine {
     constructor(size) {
         /** @private {number} */
         this.size_ = size;    // TODO Consider making the size dependent on the viewport size.
+        /** @private {Object} */
+        this.statistics_ = {
+            frameRate: []
+        };
         /** @private {Agent[]} */
         this.agents_ = [];
 
@@ -31,6 +35,15 @@ class Engine {
     run() {
         this.manageFood_();
         this.manageAgents_();
+
+        this.statistics_.frameRate.push(frameRate());
+    }
+
+    /**
+     * Save statistics relating to the current run of the simulator.
+     */
+    save() {
+        saveJSON(this.statistics_, "simulator_" + Date.now() + ".json");
     }
 
     /**
@@ -76,9 +89,9 @@ class Engine {
             }
 
             a.run();
-            a.separate(this.agents_);
             a.seek(this.food_);
             a.eat(this.food_);
+            a.separate(this.agents_);
         });
     }
 }

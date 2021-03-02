@@ -33,8 +33,6 @@ h1 {
   color: rgb(0, 128, 128);
 }
 
-/* TODO Make the control button group responsive for phone screens. */
-
 .btn {
   border-radius: 0;
 }
