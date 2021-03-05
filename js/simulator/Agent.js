@@ -2,11 +2,12 @@
 class Agent {
     /**
      * Create an Agent.
+     * @public
      * @param {number} simulatorSize The size of the simulator, used to determine the size of an Agent.
      */
-    constructor(simulatorSize) {
+    constructor(simulatorSize, location = createVector(Math.random() * width, Math.random() * height)) {
         /** @private {p5.Vector} */
-        this.location_ = createVector(Math.random() * width, Math.random() * height);
+        this.location_ = location;
         /** @private {p5.Vector} */
         this.velocity_ = createVector(0, 0);
         /** @private {p5.Vector} */
@@ -15,8 +16,8 @@ class Agent {
         this.size_ = (width / simulatorSize > 10) ? width / simulatorSize : 10;
         /** @private {number} */
         this.maxSpeed_ = 5;
-        /** @private {number} */
-        this.health_ = randomGaussian(30, 10);
+        /** @private {number} The number of frames this Agent will live for. */
+        this.health_ = randomGaussian(1800, 600);
         /** @private {p5.Color} */
         this.color_ = color(33, 237, 237);
         /** @private {boolean} Use this property to visualise agent collision. */
@@ -25,6 +26,7 @@ class Agent {
 
     /**
      * Get this Agent's location.
+     * @public
      * @returns {p5.Vector} The Agent's location.
      */
     getLocation() {
@@ -33,6 +35,7 @@ class Agent {
 
     /**
      * Get this Agent's size.
+     * @public
      * @returns {number} The Agent's size.
      */
     getSize() {
@@ -41,6 +44,7 @@ class Agent {
 
     /**
      * Determine if this Agent's health is 0.
+     * @public
      * @returns {boolean} A value representing whether or not this Agent is dead.
      */
     isDead() {
@@ -49,17 +53,19 @@ class Agent {
 
     /**
      * Move and display this Agent, and decrement its health.
+     * @public
      */
     run() {
         this.update_();
         this.checkEdges_();
         this.display_();
         // An agent loses one health point per second.
-        this.health_ -= 1 / frameRate();
+        this.health_ -= 1;
     }
 
     /**
      * Steer this Agent away from nearby Agents.
+     * @public
      * @param {Agent[]} agents An array of Agents.
      */
     separate(agents) {
@@ -72,12 +78,13 @@ class Agent {
     }
 
     /**
-     * Seek out the nearest Food item.
-     * @param {Food[]} food An array of Food objects.
+     * Seek out the nearest Edible item.
+     * @public
+     * @param {Edible[]} edibles An array of Edible objects.
      */
-    seek(food) {
+    seek(edibles) {
         const seekForce = 0.01;    // Limit how much seeking affects steer.
-        const desiredLocation = this.findNearest_(food);
+        const desiredLocation = this.findNearest_(edibles);
         let steer = this.steer_(desiredLocation);
         steer.limit(seekForce);
 
@@ -85,18 +92,19 @@ class Agent {
     }
 
     /**
-     * Determine if this Agent is in a location to eat food; if it is, remove
-     * that Food item from the simulation.
-     * @param {Food[]} food An array of Food objects.
+     * Determine if this Agent is in a location to eat an Edible item; if it
+     * is, remove that Edible item from the simulation.
+     * @public
+     * @param {Edible[]} edibles An array of Edible objects.
      */
-    eat(food) {
-        food.forEach((f) => {
-            let distance = p5.Vector.dist(this.location_, f.getLocation());
+    eat(edibles) {
+        edibles.forEach((e) => {
+            let distance = p5.Vector.dist(this.location_, e.getLocation());
 
             // Collision detection: if this Agent and the Food object are intersecting, remove the Food object.
-            if (distance < this.size_ / 2 + f.getSize() / 2) {
-                f.remove(food);
-                this.health_ += 1;
+            if (distance < this.size_ / 2 + e.getSize() / 2) {
+                this.health_ += e.getReward();
+                e.remove(edibles);
             }
         });
     }
@@ -199,20 +207,20 @@ class Agent {
     }
 
     /**
-     * Find the location of the nearest Food item to this Agent.
+     * Find the location of the nearest Edible item to this Agent.
      * @private
-     * @param {Food[]} food An array of Food objects.
-     * @returns {p5.Vector} The location of the nearest Food item.
+     * @param {Edible[]} edibles An array of Edible objects.
+     * @returns {p5.Vector} The location of the nearest Edible item.
      */
-    findNearest_(food) {
+    findNearest_(edibles) {
         let nearest = createVector(0, 0);
         let distance = Number.MAX_SAFE_INTEGER;    // Set the nearest distance to a large value that will never be exceeded.
 
         // Find which Food item is the nearest to this Agent.
-        food.forEach((f) => {
-            if (p5.Vector.dist(this.location_, f.getLocation()) < distance) {
-                nearest = f.getLocation();
-                distance = p5.Vector.dist(this.location_, f.getLocation());
+        edibles.forEach((e) => {
+            if (p5.Vector.dist(this.location_, e.getLocation()) < distance) {
+                nearest = e.getLocation();
+                distance = p5.Vector.dist(this.location_, e.getLocation());
             }
         });
 
@@ -227,7 +235,8 @@ class Agent {
      */
     steer_(desiredLocation) {
         const distance = p5.Vector.dist(this.location_, desiredLocation);
-        const direction = p5.Vector.sub(desiredLocation, this.location_).normalize();
+        let direction = p5.Vector.sub(desiredLocation, this.location_);
+        direction.normalize();
         let speed = this.maxSpeed_;
 
         // Arriving behaviour: if distance is less than 100, then the Agent will start to slow down.
@@ -237,7 +246,7 @@ class Agent {
         }
 
         const desiredVelocity = direction.mult(speed);
-        let steer = p5.Vector.sub(desiredVelocity, this.velocity_);
+        const steer = p5.Vector.sub(desiredVelocity, this.velocity_);
 
         return steer;
     }
