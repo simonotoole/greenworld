@@ -16,8 +16,6 @@ class Agent {
         /** @private {number} */
         this.maxSpeed_ = 5;
         /** @private {number} */
-        this.maxForce_ = 0.01;
-        /** @private {number} */
         this.health_ = randomGaussian(30, 10);
         /** @private {p5.Color} */
         this.color_ = color(33, 237, 237);
@@ -65,46 +63,24 @@ class Agent {
      * @param {Agent[]} agents An array of Agents.
      */
     separate(agents) {
-        const separation = this.size_;
-        const separationLimit = 0.05;    // Limit how much separation affects steer.
-        let steer = createVector(0, 0);
-        let count = 0;    // Keep a count of how many Agents this Agent is in contact with.
-        this.highlight_ = false;
-
-        // Check every other Agent to determine if this Agent is in contact with it.
-        agents.forEach((other) => {
-            const distance = p5.Vector.dist(this.location_, other.getLocation());
-
-            // If this Agent has collided with another, calculate the direction to steer towards.
-            if (distance > 0 && distance < separation) {
-                this.highlight_ = true;
-                let direction = p5.Vector.sub(this.location_, other.getLocation())
-                direction.normalize();
-                direction.div(distance);
-                steer.add(direction);
-                count++;
-            }
-        });
-
-        // Calculate an average steer force away from all Agents that this Agent is in contact with.
-        if (count > 0) {
-            steer.div(count);
-            steer.normalize();
-            steer.mult(this.maxSpeed_);
-            steer.sub(this.velocity_);
-            steer.limit(separationLimit);
-        }
+        const separationForce = 0.02;    // Limit how much separation affects steer.
+        const collisions = this.getCollisions_(agents);
+        let steer = this.calculateSeparationSteer_(collisions);
+        steer.limit(separationForce);
 
         this.applyForce_(steer);
     }
 
     /**
-     * Steer this Agent toward the nearest Food item.
+     * Seek out the nearest Food item.
      * @param {Food[]} food An array of Food objects.
      */
     seek(food) {
-        const nearestFoodLocation = this.findNearest_(food);
-        const steer = this.steer_(nearestFoodLocation);
+        const seekForce = 0.01;    // Limit how much seeking affects steer.
+        const desiredLocation = this.findNearest_(food);
+        let steer = this.steer_(desiredLocation);
+        steer.limit(seekForce);
+
         this.applyForce_(steer);
     }
 
@@ -171,6 +147,58 @@ class Agent {
     }
 
     /**
+     * Get all other Agents that this Agent is in collision with.
+     * @param {Agent[]} agents An array of Agents.
+     * @returns {Agent[]} An array of Agents that this Agent is in collision with.
+     */
+    getCollisions_(agents) {
+        this.highlight_ = false;
+        const separation = this.size_;
+        let collisions = [];
+
+        agents.forEach((other) => {
+            const distance = p5.Vector.dist(this.location_, other.getLocation());
+
+            if (this !== other && distance < separation) {
+                this.highlight_ = true;
+                collisions.push(other);
+            }
+        });
+
+        return collisions;
+    }
+
+    /**
+     * Calculate a steer force away from all other Agents that this Agent is in
+     * collision with.
+     * @param {Agent[]} agents An array of Agents.
+     * @returns {p5.Vector} The steer force.
+     */
+    calculateSeparationSteer_(agents) {
+        let steer = createVector(0, 0);
+
+        if (agents.length === 0) {
+            return steer;
+        }
+
+        agents.forEach((other) => {
+            const distance = p5.Vector.dist(this.location_, other.getLocation());
+
+            // Get a vector pointing away from other and weight its magnitude
+            // by the distance, then add it to the steer vector.
+            let direction = p5.Vector.sub(this.location_, other.getLocation());
+            direction.div(distance);
+            steer.add(direction);
+
+            // Get the average steer force away from all other agents.
+            steer.div(agents.length);
+            steer.sub(this.velocity_);
+        });
+
+        return steer;
+    }
+
+    /**
      * Find the location of the nearest Food item to this Agent.
      * @private
      * @param {Food[]} food An array of Food objects.
@@ -210,7 +238,6 @@ class Agent {
 
         const desiredVelocity = direction.mult(speed);
         let steer = p5.Vector.sub(desiredVelocity, this.velocity_);
-        steer.limit(this.maxForce_);
 
         return steer;
     }

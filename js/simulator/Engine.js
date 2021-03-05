@@ -89,9 +89,9 @@ class Engine {
             }
 
             a.run();
+            a.separate(this.agents_);
             a.seek(this.food_);
             a.eat(this.food_);
-            a.separate(this.agents_);
         });
     }
 }
