@@ -5,8 +5,7 @@ class Edible {
     /**
      * Create an Edible item.
      * @public
-     * @param {number} simulatorSize The size of the simulator, used to determine the size of an Edible item.
-     * @param {p5.Vector} location The Edible item's location.
+     * @param {p5.Vector} location The initial location of this Edible item.
      */
     constructor(location) {
         if (this.constructor === Edible) {
