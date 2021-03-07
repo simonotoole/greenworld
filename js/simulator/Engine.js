@@ -19,7 +19,7 @@ class Engine {
         this.agents_ = [];
 
         for (let i = 0; i < this.size_; i++) {
-            this.agents_.push(new Agent(this.size_));
+            this.agents_.push(new Agent());
         }
 
         /** @private {Food[]} */
@@ -72,7 +72,7 @@ class Engine {
         // number of Agents in the simulation, as this would result in
         // unbounded food regrowth. Setting the constant to 0 or a negative
         // value turns off food regrowth.
-        const regrowthConstant = 1;
+        const regrowthConstant = 2;
 
         if (regrowthConstant >= this.agents_.length || this.agents_.length === 0) {
             return;
@@ -132,6 +132,7 @@ class Engine {
             a.behave(this.agents_, this.food_, this.poison_);
             a.eat(this.food_);
             a.eat(this.poison_);
+            a.reproduce(this.agents_);
         });
     }
 }

@@ -46,4 +46,38 @@ class Genotype {
     setGene(index, weight) {
         this.chromosome_[index] = weight;
     }
+
+    /**
+     * Produce a new Genotype by performing crossover between this Genotype and
+     * a partner Genotype.
+     * @param {Genotype} partner The partner Genotype.
+     * @returns {Genotype} The resulting Genotype.
+     */
+    crossover(partner) {
+        let childChromosome = [];
+        const midpoint = Math.floor(Math.random() * this.chromosome_.length);
+
+        // Perform single-point crossover.
+        for (let i = 0; i < this.chromosome_.length; i++) {
+            if (i > midpoint) {
+                childChromosome[i] = this.getGene(i);
+            } else {
+                childChromosome[i] = partner.getGene(i);
+            }
+        }
+
+        return new Genotype(this.totalGenes_, childChromosome);
+    }
+
+    /**
+     * Randomly mutate this Genotype.
+     * @param {number} mutationRate The probability of performing mutation on any particular gene.
+     */
+    mutate(mutationRate) {
+        for (let i = 0; i < this.chromosome_.length; i++) {
+            if (Math.random() < mutationRate) {
+                this.chromosome_[i] = randomGaussian(0, 0.01);
+            }
+        }
+    }
 }

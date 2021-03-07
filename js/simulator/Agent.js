@@ -3,42 +3,48 @@ class Agent {
     /**
      * Create an Agent.
      * @public
-     * @param {number} simulatorSize The size of the simulator, used to determine the size of an Agent.
-     * @param {p5.Vector} location The initial location of this Agent.
+     * @param {object} [params] Parameters defining an Agent's location and genotype.
+     * @param {p5.Vector} [params.location] The location of this Agent.
+     * @param {Genotype} [params.genotype] This Agent's genotype.
      */
-    constructor(simulatorSize, location = createVector(Math.random() * width, Math.random() * height)) {
+    constructor({ location = createVector(Math.random() * width, Math.random() * height), genotype = null } = {}) {
+        /** @private {Genotype} */
+        this.genotype_ = this.setGenotype_(genotype);
+        /** @private {number} */
+        this.size_ = map(this.genotype_.getGene(0), -1, 1, 1, 50);
+        /** @private {number} maxSpeed is inversely proportional to size. */
+        this.maxSpeed_ = map(this.genotype_.getGene(0), -1, 1, 10, 1);
+        /** @private {number} The number of frames this Agent will live for; correlates with size. */
+        this.health_ = map(this.genotype_.getGene(0), -1, 1, 1200, 2400);
+        /** @private {number} Limit how much food seeking affects steer. */
+        this.foodAttraction_ = map(this.genotype_.getGene(1), -1, 1, -0.04, 0.04);
+        /** @private {number} Limit how much poison seeking affects steer. */
+        this.poisonAttraction_ = map(this.genotype_.getGene(2), -1, 1, -0.04, 0.04);
         /** @private {p5.Vector} */
-        this.location_ = location;
+        this.location_ = location.copy();
         /** @private {p5.Vector} */
         this.velocity_ = createVector(0, 0);
         /** @private {p5.Vector} */
         this.acceleration_ = createVector(0, 0);
-        /** @private {number} */
-        this.size_ = width / simulatorSize;
-
-        if (this.size_ < 10) {
-            this.size_ = 10;
-        } else if (this.size_ > 50) {
-            this.size_ = 50;
-        }
-
-        /** @private {Genotype} */
-        this.genotype_ = new Genotype(2);
-        this.genotype_.setGene(0, randomGaussian(0, 0.01));
-        this.genotype_.setGene(1, randomGaussian(0, 0.01));
-
         /** @private {number} Limit how much separation affects steer. */
         this.separationForce_ = 0.1;
-        /** @private {number} Limit how much food seeking affects steer. */
-        this.foodAttraction_ = this.genotype_.getGene(0);
-        /** @private {number} Limit how much poison seeking affects steer. */
-        this.poisonAttraction_ = this.genotype_.getGene(1);
-        /** @private {number} */
-        this.maxSpeed_ = 5;
-        /** @private {number} The number of frames this Agent will live for. */
-        this.health_ = randomGaussian(1800, 600);
         /** @private {p5.Color} */
         this.color_ = color(33, 237, 237);
+    }
+
+    /**
+     * Set this Agent's genotype.
+     * @param {Genotype} genotype The genotype value to assign to this Agent's genotype.
+     */
+    setGenotype_(genotype) {
+        if (genotype === null) {
+            genotype = new Genotype(3);
+            genotype.setGene(0, randomGaussian(0, 0.25));
+            genotype.setGene(1, randomGaussian(0, 0.25));
+            genotype.setGene(2, randomGaussian(0, 0.25));
+        }
+
+        return genotype;
     }
 
     /**
@@ -57,6 +63,14 @@ class Agent {
      */
     getSize() {
         return this.size_;
+    }
+
+    /**
+     * Get this Agent's genotype.
+     * @returns {Genotype} This Agent's genotype.
+     */
+    getGenotype() {
+        return this.genotype_;
     }
 
     /**
@@ -125,6 +139,28 @@ class Agent {
             if (distance < this.size_ / 2 + e.getSize() / 2) {
                 this.health_ += e.getReward();
                 e.remove(edibles);
+            }
+        });
+    }
+
+    /**
+     * Determine if this Agent is in a location to reproduce with another
+     * Agent; if it is, perform the necessary genetic operations and add a new
+     * Agent to the array of Agents.
+     * @param {Agent[]} agents An array of Agents.
+     */
+    reproduce(agents) {
+        const collisions = this.getCollisions_(agents);
+        const reproductionProbability = 0.001;
+        const mutationRate = 0.1;
+
+        collisions.forEach((other) => {
+            if (Math.random() < reproductionProbability) {
+                let newGenotype = this.genotype_.crossover(other.getGenotype());
+                newGenotype.mutate(mutationRate);
+
+                const child = new Agent({ location: this.location_, genotype: newGenotype });
+                agents.push(child);
             }
         });
     }
@@ -246,7 +282,11 @@ class Agent {
             // Get a vector pointing away from other and weight its magnitude
             // by the distance, then add it to the steer vector.
             let direction = p5.Vector.sub(this.location_, other.getLocation());
-            direction.div(distance);
+
+            if (distance > 0) {
+                direction.div(distance);
+            }
+
             steer.add(direction);
 
             // Get the average steer force away from all other agents.
