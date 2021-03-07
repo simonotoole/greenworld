@@ -181,16 +181,16 @@ class Agent {
      * @private
      */
     checkEdges_() {
-        if (this.location_.x < 0) {
-            this.location_.x = width;
-        } else if (this.location_.x > width) {
-            this.location_.x = 0;
+        if (this.location_.x + this.size_ / 2 <= 0) {
+            this.location_.x = width + this.size_ / 2;
+        } else if (this.location_.x - this.size_ / 2 >= width) {
+            this.location_.x = -this.size_ / 2;
         }
 
-        if (this.location_.y < 0) {
-            this.location_.y = height;
-        } else if (this.location_.y > height) {
-            this.location_.y = 0;
+        if (this.location_.y + this.size_ / 2 <= 0) {
+            this.location_.y = height + this.size_ / 2;
+        } else if (this.location_.y - this.size_ / 2 >= height) {
+            this.location_.y = -this.size_ / 2;
         }
     }
 
