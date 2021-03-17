@@ -1,5 +1,5 @@
 /** A class representing an autonomous agent in the simulation. */
-class Agent {
+class Agent extends Edible {
     /**
      * Create an Agent.
      * @public
@@ -8,6 +8,8 @@ class Agent {
      * @param {Genotype} [params.genotype] This Agent's genotype.
      */
     constructor({ location = createVector(Math.random() * width, Math.random() * height), genotype = null } = {}) {
+        super(location);
+
         /** @private {Genotype} */
         this.genotype_ = this.setGenotype_(genotype);
         /** @private {number} */
@@ -18,8 +20,10 @@ class Agent {
         this.health_ = map(this.genotype_.getGene(0), -1, 1, 1200, 2400);
         /** @private {number} Limit how much food seeking affects steer. */
         this.foodAttraction_ = map(this.genotype_.getGene(1), -1, 1, -0.04, 0.04);
+        /** @private {number} Limit how much agent seeking affects steer. */
+        this.agentAttraction_ = map(this.genotype_.getGene(2), -1, 1, -0.04, 0.04);
         /** @private {number} Limit how much poison seeking affects steer. */
-        this.poisonAttraction_ = map(this.genotype_.getGene(2), -1, 1, -0.04, 0.04);
+        this.poisonAttraction_ = map(this.genotype_.getGene(3), -1, 1, -0.04, 0.04);
         /** @private {p5.Vector} */
         this.location_ = location.copy();
         /** @private {p5.Vector} */
@@ -38,31 +42,14 @@ class Agent {
      */
     setGenotype_(genotype) {
         if (genotype === null) {
-            genotype = new Genotype(3);
+            genotype = new Genotype(4);
             genotype.setGene(0, randomGaussian(0, 0.25));
             genotype.setGene(1, randomGaussian(0, 0.25));
             genotype.setGene(2, randomGaussian(0, 0.25));
+            genotype.setGene(3, randomGaussian(0, 0.25));
         }
 
         return genotype;
-    }
-
-    /**
-     * Get this Agent's location.
-     * @public
-     * @returns {p5.Vector} The Agent's location.
-     */
-    getLocation() {
-        return this.location_;
-    }
-
-    /**
-     * Get this Agent's size.
-     * @public
-     * @returns {number} The Agent's size.
-     */
-    getSize() {
-        return this.size_;
     }
 
     /**
@@ -111,10 +98,17 @@ class Agent {
         }
 
         // Apply food steering.
-        if (food.length > 0) {
+        if (food.length > 0 && this.health_ < 600) {
             const foodSteer = this.seek_(food);
             foodSteer.limit(this.foodAttraction_);
             this.applyForce_(foodSteer);
+        }
+
+        // Apply agent steering.
+        if (agents.length > 1 && this.health_ >= 600) {
+            const agentSteer = this.seek_(agents);
+            agentSteer.limit(this.agentAttraction_);
+            this.applyForce_(agentSteer);
         }
 
         // Apply poison steering.
