@@ -76,7 +76,7 @@ class Genotype {
     mutate(mutationRate) {
         for (let i = 0; i < this.chromosome_.length; i++) {
             if (Math.random() < mutationRate) {
-                this.chromosome_[i] = randomGaussian(0, 0.25);
+                this.chromosome_[i] = Math.random();
             }
         }
     }

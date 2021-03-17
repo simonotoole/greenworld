@@ -132,6 +132,11 @@ class Engine {
             a.behave(this.agents_, this.food_, this.poison_);
             a.eat(this.food_);
             a.eat(this.poison_);
+
+            if (Math.random() < a.getPredationPotential()) {
+                a.eat(this.agents_);
+            }
+
             a.reproduce(this.agents_);
         });
     }

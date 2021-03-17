@@ -19,11 +19,13 @@ class Agent extends Edible {
         /** @private {number} The number of frames this Agent will live for; correlates with size. */
         this.health_ = map(this.genotype_.getGene(0), -1, 1, 1200, 2400);
         /** @private {number} Limit how much food seeking affects steer. */
-        this.foodAttraction_ = map(this.genotype_.getGene(1), -1, 1, -0.04, 0.04);
+        this.foodAttraction_ = map(this.genotype_.getGene(1), -1, 1, 0, 0.1);
         /** @private {number} Limit how much agent seeking affects steer. */
-        this.agentAttraction_ = map(this.genotype_.getGene(2), -1, 1, -0.04, 0.04);
+        this.agentAttraction_ = map(this.genotype_.getGene(2), -1, 1, 0, 0.1);
         /** @private {number} Limit how much poison seeking affects steer. */
-        this.poisonAttraction_ = map(this.genotype_.getGene(3), -1, 1, -0.04, 0.04);
+        this.poisonAttraction_ = map(this.genotype_.getGene(3), -1, 1, 0, 0.1);
+        /** @private {number} */
+        this.predationPotential_ = map(this.genotype_.getGene(4), -1, 1, 0, 0.001);
         /** @private {p5.Vector} */
         this.location_ = location.copy();
         /** @private {p5.Vector} */
@@ -42,11 +44,12 @@ class Agent extends Edible {
      */
     setGenotype_(genotype) {
         if (genotype === null) {
-            genotype = new Genotype(4);
-            genotype.setGene(0, randomGaussian(0, 0.25));
-            genotype.setGene(1, randomGaussian(0, 0.25));
-            genotype.setGene(2, randomGaussian(0, 0.25));
-            genotype.setGene(3, randomGaussian(0, 0.25));
+            genotype = new Genotype(5);
+            genotype.setGene(0, Math.random());
+            genotype.setGene(1, Math.random());
+            genotype.setGene(2, Math.random());
+            genotype.setGene(3, Math.random());
+            genotype.setGene(4, Math.random());
         }
 
         return genotype;
@@ -58,6 +61,22 @@ class Agent extends Edible {
      */
     getGenotype() {
         return this.genotype_;
+    }
+
+    /**
+     * Get this Agent's predation potential.
+     * @returns {number} This Agent's predation potential.
+     */
+    getPredationPotential() {
+        return this.predationPotential_;
+    }
+
+    /**
+     * Set this Agent's color.
+     * @param {p5.Color} color The desired color.
+     */
+    setColor(color) {
+        this.color_ = color;
     }
 
     /**
@@ -98,14 +117,14 @@ class Agent extends Edible {
         }
 
         // Apply food steering.
-        if (food.length > 0 && this.health_ < 600) {
+        if (food.length > 0) {
             const foodSteer = this.seek_(food);
             foodSteer.limit(this.foodAttraction_);
             this.applyForce_(foodSteer);
         }
 
         // Apply agent steering.
-        if (agents.length > 1 && this.health_ >= 600) {
+        if (agents.length > 1) {
             const agentSteer = this.seek_(agents);
             agentSteer.limit(this.agentAttraction_);
             this.applyForce_(agentSteer);
@@ -130,8 +149,13 @@ class Agent extends Edible {
             let distance = p5.Vector.dist(this.location_, e.getLocation());
 
             // Collision detection: if this Agent and the Edible object are intersecting, remove the Food object.
-            if (distance < this.size_ / 2 + e.getSize() / 2) {
+            if (this !== e && distance < this.size_ / 2 + e.getSize() / 2) {
                 this.health_ += e.getReward();
+
+                if (e instanceof Agent) {
+                    this.color_ = color(227, 95, 192);
+                }
+
                 e.remove(edibles);
             }
         });
@@ -145,7 +169,7 @@ class Agent extends Edible {
      */
     reproduce(agents) {
         const collisions = this.getCollisions_(agents);
-        const reproductionProbability = 0.001;
+        const reproductionProbability = 0.0005;
         const mutationRate = 0.1;
 
         collisions.forEach((other) => {
@@ -305,7 +329,7 @@ class Agent extends Edible {
         edibles.forEach((e) => {
             const distance = p5.Vector.dist(this.location_, e.getLocation());
 
-            if (distance < shortestDistance) {
+            if (this !== e && distance < shortestDistance) {
                 nearest = e.getLocation();
                 shortestDistance = distance;
             }
