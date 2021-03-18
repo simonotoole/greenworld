@@ -27,7 +27,7 @@ class Agent extends Edible {
         /** @private {number} */
         this.predationPotential_ = map(this.genotype_.getGene(4), -1, 1, 0, 0.001);
         /** @private {number} */
-        this.reproductionPotentail_ = 0.0005;
+        this.reproductionPotential_ = 0.0005;
         /** @private {p5.Vector} */
         this.location_ = location.copy();
         /** @private {p5.Vector} */
@@ -104,7 +104,7 @@ class Agent extends Edible {
         // For a population of 5, the reproduction probability should be 0.005.
         // For a population of 100, the reproduction probability should be 0.00025.
         // For a population of 500, the reproduction probability should be 0.00005.
-        this.reproductionPotentail_ = 0.025 / size;
+        this.reproductionPotential_ = 0.025 / size;
     }
 
     /**
@@ -200,7 +200,7 @@ class Agent extends Edible {
         const mutationRate = 0.1;
 
         collisions.forEach((other) => {
-            if (Math.random() < this.reproductionPotentail_) {
+            if (Math.random() < this.reproductionPotential_) {
                 let newGenotype = this.genotype_.crossover(other.getGenotype());
                 newGenotype.mutate(mutationRate);
 
