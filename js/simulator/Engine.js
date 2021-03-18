@@ -15,6 +15,8 @@ class Engine {
         this.statistics_ = {
             frameRate: []
         };
+        /** @private {number} Use this to keep count of how many frames have elapsed for statistical purposes. */
+        this.frameCount_ = 0;
         /** @private {Agent[]} */
         this.agents_ = [];
 
@@ -47,6 +49,16 @@ class Engine {
         this.manageAgents_();
 
         this.statistics_.frameRate.push(frameRate());
+
+        if (this.frameCount_ > 0 && this.frameCount_ % 10800 === 0) {
+            this.save();
+        }
+
+        if (this.frameCount_ === 108000) {
+            noLoop();
+        }
+
+        this.frameCount_++;
     }
 
     /**
