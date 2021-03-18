@@ -128,6 +128,11 @@ class Engine {
                 return;
             }
 
+            // Set this agent's reproduction and predation probabilities based
+            // on the current population size.
+            a.setPredationPotential(this.agents_.length);
+            a.setReproductionPotential(this.agents_.length);
+
             a.run();
             a.behave(this.agents_, this.food_, this.poison_);
             a.eat(this.food_);

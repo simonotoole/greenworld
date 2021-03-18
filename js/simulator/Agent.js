@@ -26,6 +26,8 @@ class Agent extends Edible {
         this.poisonAttraction_ = map(this.genotype_.getGene(3), -1, 1, 0, 0.1);
         /** @private {number} */
         this.predationPotential_ = map(this.genotype_.getGene(4), -1, 1, 0, 0.001);
+        /** @private {number} */
+        this.reproductionPotentail_ = 0.0005;
         /** @private {p5.Vector} */
         this.location_ = location.copy();
         /** @private {p5.Vector} */
@@ -64,6 +66,14 @@ class Agent extends Edible {
     }
 
     /**
+     * Set this Agent's color.
+     * @param {p5.Color} color The desired color.
+     */
+    setColor(color) {
+        this.color_ = color;
+    }
+
+    /**
      * Get this Agent's predation potential.
      * @returns {number} This Agent's predation potential.
      */
@@ -72,11 +82,29 @@ class Agent extends Edible {
     }
 
     /**
-     * Set this Agent's color.
-     * @param {p5.Color} color The desired color.
+     * Set this Agent's predation potential based on the population size, so
+     * that the larger the population, the greater the chance of predation
+     * becomes.
+     * @param {number} size The size of the population of Agents.
      */
-    setColor(color) {
-        this.color_ = color;
+    setPredationPotential(size) {
+        // For a population of 5, the predation probability should be 0.0001.
+        // For a population of 100, the predation probability should be 0.002.
+        // For a population of 500, the predation probability should be 0.01.
+        this.predationPotential_ = size / 50000;
+    }
+
+    /**
+     * Set this Agent's reproduction potential based on the population size, so
+     * that the smaller the population, the greater the change of reproduction
+     * becomes.
+     * @param {number} size The size of the population of Agents.
+     */
+    setReproductionPotential(size) {
+        // For a population of 5, the reproduction probability should be 0.005.
+        // For a population of 100, the reproduction probability should be 0.00025.
+        // For a population of 500, the reproduction probability should be 0.00005.
+        this.reproductionPotentail_ = 0.025 / size;
     }
 
     /**
@@ -169,11 +197,10 @@ class Agent extends Edible {
      */
     reproduce(agents) {
         const collisions = this.getCollisions_(agents);
-        const reproductionProbability = 0.0005;
         const mutationRate = 0.1;
 
         collisions.forEach((other) => {
-            if (Math.random() < reproductionProbability) {
+            if (Math.random() < this.reproductionPotentail_) {
                 let newGenotype = this.genotype_.crossover(other.getGenotype());
                 newGenotype.mutate(mutationRate);
 
