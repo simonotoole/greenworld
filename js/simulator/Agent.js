@@ -139,28 +139,28 @@ class Agent extends Edible {
     behave(agents, food, poison) {
         // Apply separation.
         if (agents.length > 1) {
-            const separation = this.separate_(agents);
+            let separation = this.separate_(agents);
             separation.limit(this.separationForce_);
             this.applyForce_(separation);
         }
 
         // Apply food steering.
         if (food.length > 0) {
-            const foodSteer = this.seek_(food);
+            let foodSteer = this.seek_(food);
             foodSteer.limit(this.foodAttraction_);
             this.applyForce_(foodSteer);
         }
 
         // Apply agent steering.
         if (agents.length > 1) {
-            const agentSteer = this.seek_(agents);
+            let agentSteer = this.seek_(agents);
             agentSteer.limit(this.agentAttraction_);
             this.applyForce_(agentSteer);
         }
 
         // Apply poison steering.
         if (poison.length > 0) {
-            const poisonSteer = this.seek_(poison);
+            let poisonSteer = this.seek_(poison);
             poisonSteer.limit(this.poisonAttraction_);
             this.applyForce_(poisonSteer);
         }
