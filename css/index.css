@@ -66,3 +66,8 @@ a {
   color: rgb(30, 144, 255);
   text-decoration: none;
 }
+
+i {
+  color: rgb(173, 216, 230);
+  font-size: calc(1.5rem + 0.5vw);
+}
