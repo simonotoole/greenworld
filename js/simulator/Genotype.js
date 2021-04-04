@@ -9,12 +9,15 @@ class Genotype {
      * @param {number[]} chromosome An array of floating-point numbers encoding a genetic representation.
      */
     constructor(totalGenes, chromosome = []) {
-        /** @private {number[]} */
+        /** @private {number} */
         this.totalGenes_ = totalGenes;
+        /** @private {number[]} */
         this.chromosome_ = chromosome;
 
-        for (let i = 0; i < this.totalGenes_; i++) {
-            this.chromosome_[i] = 0;
+        if (chromosome.length === 0) {
+            for (let i = 0; i < this.totalGenes_; i++) {
+                this.chromosome_[i] = Math.random();
+            }
         }
     }
 
@@ -55,7 +58,12 @@ class Genotype {
      */
     crossover(partner) {
         let childChromosome = [];
-        const midpoint = Math.floor(Math.random() * this.chromosome_.length);
+        // Generate a random midpoint between 1 and chromosome length - 2. This
+        // ensures that the child chromosome will contain genes from both
+        // parents.
+        const min = 1
+        const max = this.chromosome_.length - 1
+        const midpoint = Math.floor(Math.random() * (max - min) + min);
 
         // Perform single-point crossover.
         for (let i = 0; i < this.chromosome_.length; i++) {

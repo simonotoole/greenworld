@@ -9,23 +9,22 @@ class Agent extends Edible {
      */
     constructor({ location = createVector(Math.random() * width, Math.random() * height), genotype = null } = {}) {
         super(location);
-
         /** @private {Genotype} */
         this.genotype_ = this.setGenotype_(genotype);
         /** @private {number} */
-        this.size_ = map(this.genotype_.getGene(0), -1, 1, 1, 50);
+        this.size_ = map(this.genotype_.getGene(0), 0, 1, 5, 50);
         /** @private {number} maxSpeed is inversely proportional to size. */
-        this.maxSpeed_ = map(this.genotype_.getGene(0), -1, 1, 10, 1);
+        this.maxSpeed_ = map(this.genotype_.getGene(0), 0, 1, 10, 1);
         /** @private {number} The number of frames this Agent will live for; correlates with size. */
-        this.health_ = map(this.genotype_.getGene(0), -1, 1, 1200, 2400);
+        this.health_ = map(this.genotype_.getGene(0), 0, 1, 1200, 2400);
         /** @private {number} Limit how much food seeking affects steer. */
-        this.foodAttraction_ = map(this.genotype_.getGene(1), -1, 1, 0, 0.1);
+        this.foodAttraction_ = map(this.genotype_.getGene(1), 0, 1, 0, 0.1);
         /** @private {number} Limit how much agent seeking affects steer. */
-        this.agentAttraction_ = map(this.genotype_.getGene(2), -1, 1, 0, 0.1);
+        this.agentAttraction_ = map(this.genotype_.getGene(2), 0, 1, 0, 0.1);
         /** @private {number} Limit how much poison seeking affects steer. */
-        this.poisonAttraction_ = map(this.genotype_.getGene(3), -1, 1, 0, 0.1);
+        this.poisonAttraction_ = map(this.genotype_.getGene(3), 0, 1, 0, 0.1);
         /** @private {number} */
-        this.predationPotential_ = map(this.genotype_.getGene(4), -1, 1, 0, 0.001);
+        this.predationPotential_ = map(this.genotype_.getGene(4), 0, 1, 0, 0.001);
         /** @private {number} */
         this.reproductionPotential_ = 0.0005;
         /** @private {p5.Vector} */
@@ -47,11 +46,6 @@ class Agent extends Edible {
     setGenotype_(genotype) {
         if (genotype === null) {
             genotype = new Genotype(5);
-            genotype.setGene(0, Math.random());
-            genotype.setGene(1, Math.random());
-            genotype.setGene(2, Math.random());
-            genotype.setGene(3, Math.random());
-            genotype.setGene(4, Math.random());
         }
 
         return genotype;

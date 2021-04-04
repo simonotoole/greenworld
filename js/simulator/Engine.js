@@ -10,7 +10,7 @@ class Engine {
      */
     constructor(size) {
         /** @private {number} */
-        this.size_ = size;    // TODO Consider making the size dependent on the viewport size.
+        this.size_ = size;
         /** @private {Object} */
         this.statistics_ = {
             frameRate: []
