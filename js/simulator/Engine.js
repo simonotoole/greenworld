@@ -50,13 +50,13 @@ class Engine {
 
         this.statistics_.frameRate.push(frameRate());
 
-        if (this.frameCount_ > 0 && this.frameCount_ % 10800 === 0) {
-            this.save();
-        }
+        // if (this.frameCount_ > 0 && this.frameCount_ % 10800 === 0) {
+        //     this.save();
+        // }
 
-        if (this.frameCount_ === 108000) {
-            noLoop();
-        }
+        // if (this.frameCount_ === 108000) {
+        //     noLoop();
+        // }
 
         this.frameCount_++;
     }
@@ -84,7 +84,7 @@ class Engine {
         // number of Agents in the simulation, as this would result in
         // unbounded food regrowth. Setting the constant to 0 or a negative
         // value turns off food regrowth.
-        const regrowthConstant = 2;
+        const regrowthConstant = 3;
 
         if (regrowthConstant >= this.agents_.length || this.agents_.length === 0) {
             return;
@@ -113,7 +113,7 @@ class Engine {
         // number of Food items in the simulation, as this would result in
         // unbounded poison regrowth. Setting the constant to 0 or a negative
         // value turns off poison regrowth.
-        const regrowthConstant = 1;
+        const regrowthConstant = 3;
 
         if (regrowthConstant >= this.food_.length || this.food_.length === 0) {
             return;

@@ -30,6 +30,6 @@ class Poison extends Edible {
      * @returns {number} A damage value proportional to the Poison's size.
      */
     getReward() {
-        return -(this.size_);
+        return -(this.size_ * this.size_);
     }
 }
