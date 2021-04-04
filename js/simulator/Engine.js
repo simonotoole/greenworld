@@ -52,7 +52,7 @@ class Engine {
         //     this.save();
         // }
 
-        if (this.frameCount_ === 36000) {
+        if (this.frameCount_ === 108000) {
             noLoop();
             this.save();
         }
@@ -90,6 +90,7 @@ class Engine {
         }
 
         const regrowthRate = regrowthConstant / this.agents_.length;
+        this.statistics_.foodRegrowthRate.push(regrowthRate)
 
         // Add a random probability that new food will be added to the simulation.
         if (Math.random() < regrowthRate) {
@@ -119,6 +120,7 @@ class Engine {
         }
 
         const regrowthRate = regrowthConstant / this.food_.length;
+        this.statistics_.poisonRegrowthRate.push(regrowthRate)
 
         // Add a random probability that new poison will be added to the simulation.
         if (Math.random() < regrowthRate) {
@@ -133,6 +135,8 @@ class Engine {
     manageAgents_() {
         this.agents_.forEach((a, index) => {
             if (a.isDead()) {
+                this.statistics_.lifespan.push(a.lifespan_)
+                this.statistics_.reproductionCount.push(a.reproductionCount_)
                 this.agents_.splice(index, 1);
                 this.food_.push(new Food(this.size_, a.getLocation()));
 
@@ -160,6 +164,9 @@ class Engine {
     initStatisticsMap_() {
         return {
             frameRate: [],
+            totalAgentPopulation: [],
+            totalFoodPopulation: [],
+            totalPoisonPopulation: [],
             medianSize: [],
             minSize: [],
             maxSize: [],
@@ -184,10 +191,12 @@ class Engine {
             minPoisonAttraction: [],
             maxPoisonAttraction: [],
             stdPoisonAttraction: [],
-            medianPredationPotential: [],
-            minPredationPotential: [],
-            maxPredationPotential: [],
-            stdPredationPotential: []
+            predationPotential: [],
+            reproductionPotential: [],
+            lifespan: [],
+            reproductionCount: [],
+            foodRegrowthRate: [],
+            poisonRegrowthRate: []
         };
     }
 
@@ -197,6 +206,9 @@ class Engine {
      */
     calculateStatistics_() {
         this.statistics_.frameRate.push(frameRate());
+        this.statistics_.totalAgentPopulation.push(this.agents_.length);
+        this.statistics_.totalFoodPopulation.push(this.food_.length);
+        this.statistics_.totalPoisonPopulation.push(this.poison_.length);
         this.statistics_.medianSize.push(math.median(this.agents_.map((a) => a.size_)));
         this.statistics_.minSize.push(math.min(this.agents_.map((a) => a.size_)));
         this.statistics_.maxSize.push(math.max(this.agents_.map((a) => a.size_)));
@@ -221,9 +233,7 @@ class Engine {
         this.statistics_.minPoisonAttraction.push(math.min(this.agents_.map((a) => a.poisonAttraction_)));
         this.statistics_.maxPoisonAttraction.push(math.max(this.agents_.map((a) => a.poisonAttraction_)));
         this.statistics_.stdPoisonAttraction.push(math.std(this.agents_.map((a) => a.poisonAttraction_)));
-        this.statistics_.medianPredationPotential.push(math.median(this.agents_.map((a) => a.predationPotential_)));
-        this.statistics_.minPredationPotential.push(math.min(this.agents_.map((a) => a.predationPotential_)));
-        this.statistics_.maxPredationPotential.push(math.max(this.agents_.map((a) => a.predationPotential_)));
-        this.statistics_.stdPredationPotential.push(math.std(this.agents_.map((a) => a.predationPotential_)));
+        this.statistics_.predationPotential.push(this.agents_[0].predationPotential_);
+        this.statistics_.reproductionPotential.push(this.agents_[0].reproductionPotential_);
     }
 }

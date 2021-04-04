@@ -27,6 +27,10 @@ class Agent extends Edible {
         this.predationPotential_ = map(this.genotype_.getGene(4), 0, 1, 0, 0.001);
         /** @private {number} */
         this.reproductionPotential_ = 0.0005;
+        /** @private {number} */
+        this.lifespan_ = 0;
+        /** @private {number} */
+        this.reproductionCount_ = 0;
         /** @private {p5.Vector} */
         this.location_ = location.copy();
         /** @private {p5.Vector} */
