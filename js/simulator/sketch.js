@@ -20,7 +20,6 @@ function setup() {
     }
 
     initialize();
-    // Test commit
 }
 
 /**

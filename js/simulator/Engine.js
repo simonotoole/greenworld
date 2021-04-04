@@ -12,9 +12,7 @@ class Engine {
         /** @private {number} */
         this.size_ = size;
         /** @private {Object} */
-        this.statistics_ = {
-            frameRate: []
-        };
+        this.statistics_ = this.initStatisticsMap_();
         /** @private {number} Use this to keep count of how many frames have elapsed for statistical purposes. */
         this.frameCount_ = 0;
         /** @private {Agent[]} */
@@ -48,7 +46,7 @@ class Engine {
         this.managePoison_();
         this.manageAgents_();
 
-        this.statistics_.frameRate.push(frameRate());
+        this.calculateStatistics_();
 
         // if (this.frameCount_ > 0 && this.frameCount_ % 10800 === 0) {
         //     this.save();
@@ -156,5 +154,75 @@ class Engine {
 
             a.reproduce(this.agents_);
         });
+    }
+
+    initStatisticsMap_() {
+        return {
+            frameRate: [],
+            medianSize: [],
+            minSize: [],
+            maxSize: [],
+            stdSize: [],
+            medianSpeed: [],
+            minSpeed: [],
+            maxSpeed: [],
+            stdSpeed: [],
+            medianHealth: [],
+            minHealth: [],
+            maxHealth: [],
+            stdHealth: [],
+            medianFoodAttraction: [],
+            minFoodAttraction: [],
+            maxFoodAttraction: [],
+            stdFoodAttraction: [],
+            medianAgentAttraction: [],
+            minAgentAttraction: [],
+            maxAgentAttraction: [],
+            stdAgentAttraction: [],
+            medianPoisonAttraction: [],
+            minPoisonAttraction: [],
+            maxPoisonAttraction: [],
+            stdPoisonAttraction: [],
+            medianPredationPotential: [],
+            minPredationPotential: [],
+            maxPredationPotential: [],
+            stdPredationPotential: []
+        };
+    }
+
+    /**
+     * Calculate evolution statistics for this Engine instance.
+     * @private
+     */
+    calculateStatistics_() {
+        this.statistics_.frameRate.push(frameRate());
+        this.statistics_.medianSize.push(math.median(this.agents_.map((a) => a.size_)));
+        this.statistics_.minSize.push(math.min(this.agents_.map((a) => a.size_)));
+        this.statistics_.maxSize.push(math.max(this.agents_.map((a) => a.size_)));
+        this.statistics_.stdSize.push(math.std(this.agents_.map((a) => a.size_)));
+        this.statistics_.medianSpeed.push(math.median(this.agents_.map((a) => a.maxSpeed_)));
+        this.statistics_.minSpeed.push(math.min(this.agents_.map((a) => a.maxSpeed_)));
+        this.statistics_.maxSpeed.push(math.max(this.agents_.map((a) => a.maxSpeed_)));
+        this.statistics_.stdSpeed.push(math.std(this.agents_.map((a) => a.maxSpeed_)));
+        this.statistics_.medianHealth.push(math.median(this.agents_.map((a) => a.health_)));
+        this.statistics_.minHealth.push(math.min(this.agents_.map((a) => a.health_)));
+        this.statistics_.maxHealth.push(math.max(this.agents_.map((a) => a.health_)));
+        this.statistics_.stdHealth.push(math.std(this.agents_.map((a) => a.health_)));
+        this.statistics_.medianFoodAttraction.push(math.median(this.agents_.map((a) => a.foodAttraction_)));
+        this.statistics_.minFoodAttraction.push(math.min(this.agents_.map((a) => a.foodAttraction_)));
+        this.statistics_.maxFoodAttraction.push(math.max(this.agents_.map((a) => a.foodAttraction_)));
+        this.statistics_.stdFoodAttraction.push(math.std(this.agents_.map((a) => a.foodAttraction_)));
+        this.statistics_.medianAgentAttraction.push(math.median(this.agents_.map((a) => a.agentAttraction_)));
+        this.statistics_.minAgentAttraction.push(math.min(this.agents_.map((a) => a.agentAttraction_)));
+        this.statistics_.maxAgentAttraction.push(math.max(this.agents_.map((a) => a.agentAttraction_)));
+        this.statistics_.stdAgentAttraction.push(math.std(this.agents_.map((a) => a.agentAttraction_)));
+        this.statistics_.medianPoisonAttraction.push(math.median(this.agents_.map((a) => a.poisonAttraction_)));
+        this.statistics_.minPoisonAttraction.push(math.min(this.agents_.map((a) => a.poisonAttraction_)));
+        this.statistics_.maxPoisonAttraction.push(math.max(this.agents_.map((a) => a.poisonAttraction_)));
+        this.statistics_.stdPoisonAttraction.push(math.std(this.agents_.map((a) => a.poisonAttraction_)));
+        this.statistics_.medianPredationPotential.push(math.median(this.agents_.map((a) => a.predationPotential_)));
+        this.statistics_.minPredationPotential.push(math.min(this.agents_.map((a) => a.predationPotential_)));
+        this.statistics_.maxPredationPotential.push(math.max(this.agents_.map((a) => a.predationPotential_)));
+        this.statistics_.stdPredationPotential.push(math.std(this.agents_.map((a) => a.predationPotential_)));
     }
 }
