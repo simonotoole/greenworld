@@ -135,6 +135,7 @@ class Engine {
     manageAgents_() {
         this.agents_.forEach((a, index) => {
             if (a.isDead()) {
+                debugger;
                 this.statistics_.lifespan.push(a.lifespan_)
                 this.statistics_.reproductionCount.push(a.reproductionCount_)
                 this.agents_.splice(index, 1);

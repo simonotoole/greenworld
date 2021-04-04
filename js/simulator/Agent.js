@@ -124,7 +124,9 @@ class Agent extends Edible {
         this.display_();
 
         // An agent loses one health point per frame.
-        this.health_ -= 1;
+        this.health_--;
+        // Increment lifespan count for statistical use.
+        this.lifespan_++;
     }
 
     /**
@@ -204,6 +206,9 @@ class Agent extends Edible {
 
                 const child = new Agent({ location: this.location_, genotype: newGenotype });
                 agents.push(child);
+
+                // Increment reproduction count for statistical use.
+                this.reproductionCount_++;
             }
         });
     }
