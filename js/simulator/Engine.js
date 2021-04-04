@@ -52,9 +52,10 @@ class Engine {
         //     this.save();
         // }
 
-        // if (this.frameCount_ === 108000) {
-        //     noLoop();
-        // }
+        if (this.frameCount_ === 36000) {
+            noLoop();
+            this.save();
+        }
 
         this.frameCount_++;
     }
