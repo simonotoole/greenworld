@@ -46,11 +46,7 @@ class Engine {
         this.managePoison_();
         this.manageAgents_();
 
-        this.calculateStatistics_();
-
-        // if (this.frameCount_ > 0 && this.frameCount_ % 10800 === 0) {
-        //     this.save();
-        // }
+        // this.calculateStatistics_();
 
         if (this.frameCount_ === 108000) {
             noLoop();
@@ -135,7 +131,6 @@ class Engine {
     manageAgents_() {
         this.agents_.forEach((a, index) => {
             if (a.isDead()) {
-                debugger;
                 this.statistics_.lifespan.push(a.lifespan_)
                 this.statistics_.reproductionCount.push(a.reproductionCount_)
                 this.agents_.splice(index, 1);
@@ -154,9 +149,10 @@ class Engine {
             a.eat(this.food_);
             a.eat(this.poison_);
 
-            if (Math.random() < a.getPredationPotential()) {
-                a.eat(this.agents_);
-            }
+            // TODO: Turn predation back on.
+            // if (Math.random() < a.getPredationPotential()) {
+            //     a.eat(this.agents_);
+            // }
 
             a.reproduce(this.agents_);
         });
