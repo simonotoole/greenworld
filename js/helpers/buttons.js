@@ -22,7 +22,7 @@ const hide = (btn) => {
 const playButton = document.getElementById("btn-play");
 const newButton = document.getElementById("btn-new");
 const pauseButton = document.getElementById("btn-pause");
-const statsButton = document.getElementById("btn-stats");
+// const statsButton = document.getElementById("btn-stats");
 
 playButton.addEventListener("click", (event) => {
     play();
@@ -30,7 +30,7 @@ playButton.addEventListener("click", (event) => {
     show(newButton);
     show(pauseButton);
     hide(playButton);
-    hide(statsButton);
+    // hide(statsButton);
 });
 
 newButton.addEventListener("click", (event) => {
@@ -39,17 +39,17 @@ newButton.addEventListener("click", (event) => {
     show(playButton);
     hide(newButton);
     hide(pauseButton);
-    hide(statsButton);
+    // hide(statsButton);
 });
 
 pauseButton.addEventListener("click", (event) => {
     pause();
 
     show(playButton);
-    show(statsButton);
+    // show(statsButton);
     hide(pauseButton);
 });
 
-statsButton.addEventListener("click", (event) => {
-    saveStatistics();
-});
+// statsButton.addEventListener("click", (event) => {
+//     saveStatistics();
+// });

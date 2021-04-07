@@ -46,12 +46,7 @@ class Engine {
         this.managePoison_();
         this.manageAgents_();
 
-        // this.calculateStatistics_();
-
-        if (this.frameCount_ === 108000) {
-            noLoop();
-            this.save();
-        }
+        this.calculateStatistics_();
 
         this.frameCount_++;
     }
@@ -149,10 +144,9 @@ class Engine {
             a.eat(this.food_);
             a.eat(this.poison_);
 
-            // TODO: Turn predation back on.
-            // if (Math.random() < a.getPredationPotential()) {
-            //     a.eat(this.agents_);
-            // }
+            if (Math.random() < a.getPredationPotential()) {
+                a.eat(this.agents_);
+            }
 
             a.reproduce(this.agents_);
         });

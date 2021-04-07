@@ -102,8 +102,7 @@ class Agent extends Edible {
         // For a population of 5, the reproduction probability should be 0.005.
         // For a population of 100, the reproduction probability should be 0.00025.
         // For a population of 500, the reproduction probability should be 0.00005.
-        // TODO: Set constant to 0.025.
-        this.reproductionPotential_ = 0.00785 / size;
+        this.reproductionPotential_ = 0.025 / size;
     }
 
     /**
